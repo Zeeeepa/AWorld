@@ -98,7 +98,7 @@ class AworldTaskExecutor(BaseModel):
             logging.info(f"✅[task executor] execute task#{task.task_id} finished, use time {time.time() - start_time:.2f}s")
 
     async def load_task(self):
-        interval = int(os.environ.get("AWORLD_TASK_LOAD_INTERVAL", 10))
+        interval = int(os.environ.get("AWORLD_TASK_LOAD_INTERVAL", 5))
         while True:
             # calculate the number of tasks to load
             need_load = self._semaphore._value
@@ -108,11 +108,11 @@ class AworldTaskExecutor(BaseModel):
                 continue
 
             try:
-                # 使用原子操作获取并标记任务
+                # only get one
                 tasks = await self._task_db.acquire_and_mark_tasks(
                     status="INIT",
                     new_status="RUNNING",
-                    nums=need_load
+                    nums=1
                 )
                 
                 logging.info(f"🔍[task executor] atomically acquired {len(tasks)} tasks from db (need {need_load})")

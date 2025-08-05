@@ -635,7 +635,9 @@ class Agent(BaseAgent[Observation, Union[List[ActionModel], None]]):
                     model=self.model_name,
                     temperature=self.conf.llm_config.llm_temperature,
                     tools=self.tools if self.use_tools_in_prompt and self.tools else None,
-                    stream=kwargs.get("stream", False)
+                    stream=kwargs.get("stream", False),
+                    top_p=self.conf.llm_config.top_p,
+                    top_k=self.conf.llm_config.top_k
                 )
                 if outputs and isinstance(outputs, Outputs):
                     await outputs.add_output(MessageOutput(source=llm_response, json_parse=False))

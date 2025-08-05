@@ -78,7 +78,7 @@ class ClientType(Enum):
 class ModelConfig(BaseModel):
     llm_provider: str = None
     llm_model_name: str = None
-    llm_temperature: float = 1.
+    llm_temperature: float = 0.6
     llm_base_url: str = None
     llm_api_key: str = None
     llm_client_type: ClientType = ClientType.SDK
@@ -86,6 +86,8 @@ class ModelConfig(BaseModel):
     llm_async_enabled: bool = True
     max_retries: int = 3
     timeout: int = 180
+    top_p: float = 0.95
+    top_k: int = 20
 
 
 class AgentConfig(BaseModel):
