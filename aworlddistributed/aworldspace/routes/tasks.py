@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import AsyncGenerator, Optional, List, Dict, Any
 import zipfile
 
+import numpy as np
 import oss2
 
 from aworld.metrics import MetricContext
@@ -98,7 +99,7 @@ class AworldTaskExecutor(BaseModel):
             logging.info(f"✅[task executor] execute task#{task.task_id} finished, use time {time.time() - start_time:.2f}s")
 
     async def load_task(self):
-        interval = int(os.environ.get("AWORLD_TASK_LOAD_INTERVAL", 5))
+        interval = int(os.environ.get("AWORLD_TASK_LOAD_INTERVAL", 10))
         while True:
             # calculate the number of tasks to load
             need_load = self._semaphore._value
@@ -122,11 +123,13 @@ class AworldTaskExecutor(BaseModel):
                     await asyncio.sleep(interval)
                     continue
 
-                # 将任务放入队列
+                # add task to queue
                 for task in tasks:
                     await self._tasks.put(task)
                     logging.info(f"✅[task executor] task#{task.task_id} queued for execution")
-                    
+
+                # sleep for reload
+                await asyncio.sleep(np.random.randint(1, 5))
                 return True
             except Exception as e:
                 logging.error(f"❌[task executor] failed to load tasks: {e}")
