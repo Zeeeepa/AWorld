@@ -85,13 +85,13 @@ class SequenceRunner(TaskRunner):
                                                                               step=step,
                                                                               outputs=self.outputs,
                                                                               stream=self.conf.get("stream", False),
-                                                                              exp_id=exp_id)
+                                                                              exp_id=exp_id,context=context)
                                 else:
                                     policy: List[ActionModel] = await cur_agent.async_run(observation,
                                                                                           step=step,
                                                                                           outputs=self.outputs,
                                                                                           stream=self.conf.get("stream", False),
-                                                                                          exp_id=exp_id)
+                                                                                          exp_id=exp_id,context=context)
 
                                 step_span.set_attribute("actions", json.dumps([action.model_dump() for action in policy], ensure_ascii=False))
                                 observation.content = None

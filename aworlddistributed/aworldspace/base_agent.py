@@ -7,13 +7,10 @@ from abc import abstractmethod
 from typing import List, AsyncGenerator, Any
 
 from aworld.config import AgentConfig, TaskConfig
-from aworld.core.agent.base import Agent
 from aworld.core.task import Task
 from aworld.output import WorkSpace, AworldUI, Outputs
 from aworld.runner import Runners
-
 from aworldspace.ui.open_aworld_ui import OpenAworldUI
-
 from client.aworld_client import AworldTask
 
 
@@ -117,7 +114,8 @@ class AworldBaseAgent:
 
         agent_config =await self.get_agent_config(body)
         mcp_servers = await self.get_mcp_servers(body)
-        agent = Agent(
+        from aworldspace.models.agent import TaskAgent
+        agent = TaskAgent(
             conf=agent_config,
             name=agent_config.name,
             system_prompt=agent_config.system_prompt,
